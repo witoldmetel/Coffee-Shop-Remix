@@ -12,7 +12,7 @@ import { I18nextProvider, initReactI18next } from "react-i18next";
 import Backend from "i18next-fs-backend";
 import i18n from "./localization/i18n";
 import { resolve } from "node:path";
-import { resources } from "./localization/resource";
+import { resources, returnLanguageIfSupported } from "./localization/resource";
 
 const ABORT_DELAY = 5000;
 
@@ -22,12 +22,16 @@ export default async function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
+  const url = new URL(request.url);
+  const lang = url.pathname.split("/")[1];
+
   const callbackName = isbot(request.headers.get("user-agent"))
     ? "onAllReady"
     : "onShellReady";
 
   const instance = createInstance();
-  const lng = await i18next.getLocale(request);
+  const lng =
+    returnLanguageIfSupported(lang) ?? (await i18next.getLocale(request));
   const ns = i18next.getRouteNamespaces(remixContext);
 
   await instance

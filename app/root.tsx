@@ -13,9 +13,11 @@ import { LoaderFunctionArgs, json } from "@remix-run/node";
 import i18next from "./localization/i18n.server";
 
 import "./tailwind.css?inline";
+import { returnLanguageIfSupported } from "./localization/resource";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const locale = await i18next.getLocale(request);
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  const lang = returnLanguageIfSupported(params.lang);
+  const locale = lang ?? (await i18next.getLocale(request));
 
   return json({ locale });
 }
@@ -40,14 +42,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
   useChangeLanguage(locale);
 
   return (
-    <html lang={locale} dir={i18n.dir()}>
+    <html lang={locale} dir={i18n.dir()} suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         {children}
         <ScrollRestoration />
         <Scripts />

@@ -4,6 +4,8 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { remixDevTools } from "remix-development-tools";
 
+import { routes } from "./config/remix-config";
+
 installGlobals();
 
 export default defineConfig({
@@ -11,7 +13,7 @@ export default defineConfig({
     remixDevTools({
       pluginDir: "./plugins",
     }),
-    remix(),
+    remix({ routes }),
     tsconfigPaths(),
   ],
   ssr: {

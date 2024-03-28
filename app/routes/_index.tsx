@@ -1,6 +1,8 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
 
+import { LanguageSwitcher } from "~/components";
+
 export const meta: MetaFunction = () => {
   return [
     { title: "Coffee Shop" },
@@ -9,13 +11,12 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>{t("hi")}</h1>
-      <button onClick={() => i18n.changeLanguage("en")}>English</button>
-      <button onClick={() => i18n.changeLanguage("pl")}>Polish</button>
+      <LanguageSwitcher />
     </div>
   );
 }
